@@ -1,12 +1,22 @@
-import React, { FC, useState } from "react";
-import "./App.css";
-import { Typography, Row, Col, Select, Button } from "antd";
+import React, { FC, useState, ReactText } from "react";
+import { Typography, Row, Col, Select, Button, Dropdown, Menu } from "antd";
 import {
   RightCircleOutlined,
   LeftCircleOutlined,
   LoadingOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
+import {
+  TEAM_LEADS,
+  STATUS,
+  QUOTE_DATA,
+  ADVISORS,
+  RECRUITMENT,
+  CLEARANCE,
+  NOTES,
+} from "./constant";
 import { CustomCard } from "./components";
+import "./App.css";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -14,7 +24,14 @@ const { Option } = Select;
 const App: FC = () => {
   const [week, setWeek] = useState(1);
   const [load, setLoad] = useState(false);
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState(STATUS[0].value);
+  const [leadName, setLeadName] = useState(TEAM_LEADS[0]);
+
+  function getTimeOut() {
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  }
 
   function handleChange(value: string) {
     setStatus(value);
@@ -22,40 +39,60 @@ const App: FC = () => {
 
   function changeWeek(direction: string) {
     setLoad(true);
-    setTimeout(() => {
-      if (direction === "left") {
-        setWeek(week <= 1 ? 1 : week - 1);
-      } else {
-        setWeek(week >= 5 ? 5 : week + 1);
-      }
-      setLoad(false);
-    }, 1000);
+    if (direction === "left") {
+      setWeek(week <= 1 ? 1 : week - 1);
+    } else {
+      setWeek(week >= 5 ? 5 : week + 1);
+    }
+    getTimeOut();
   }
+
+  function changeName(key: ReactText) {
+    setLoad(true);
+    setLeadName(TEAM_LEADS[Number(key)]);
+    getTimeOut();
+  }
+
+  const menu = (
+    <Menu onClick={({ key }) => changeName(key)}>
+      {TEAM_LEADS.map((lead: string, i) => {
+        return (
+          <Menu.Item key={i} title={lead}>
+            {lead}
+          </Menu.Item>
+        );
+      })}
+    </Menu>
+  );
 
   return (
     <Col xs={{ span: 24 }} lg={{ span: 16, offset: 4 }}>
       <Row justify="space-between" align="middle">
-        <Title>Nilunda Wimalasena</Title>
+        <Dropdown trigger={["click"]} overlay={menu}>
+          <Title className="heading">
+            {leadName}&nbsp; &nbsp; <DownOutlined style={{ fontSize: 20 }} />
+          </Title>
+        </Dropdown>
         <Select
           className={`select-input ${
             status === "pending"
               ? "select-input-pending"
               : status === "absent"
               ? "select-input-absent"
-              : "select-input-complete"
+              : "select-input-completed"
           }`}
-          defaultValue="Pending"
+          defaultValue={status}
           onChange={(value) => handleChange(value)}
         >
-          <Option className="select-input-pending" value="pending">
-            Pending
-          </Option>
-          <Option className="select-input-complete" value="completed">
-            Completed
-          </Option>
-          <Option className="select-input-absent" value="absent">
-            Absent
-          </Option>
+          {STATUS.map((state, i) => (
+            <Option
+              key={i}
+              className={`select-input-${state.value}`}
+              value={state.value}
+            >
+              {state.displayVal}
+            </Option>
+          ))}
         </Select>
       </Row>
       <br />
@@ -81,68 +118,32 @@ const App: FC = () => {
       ) : (
         <>
           <Row gutter={[32, 32]}>
-            {" "}
             <Col xs={{ span: 24 }} lg={{ span: 12 }}>
               <CustomCard
                 cardType="percentage"
                 cardTitle="QUOTATIONS"
-                data={[
-                  { key: "1", name: "Target", value: "25" },
-                  { key: "2", name: "Actual", value: "5" },
-                ]}
+                data={QUOTE_DATA}
               />
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 12 }}>
               <CustomCard
                 cardType="percentage"
                 cardTitle="ACTIVE ADVISORS"
-                data={[
-                  { key: "1", name: "Target", value: "25" },
-                  { key: "2", name: "Actual", value: "5" },
-                ]}
+                data={ADVISORS}
               />
             </Col>
           </Row>
           <Row gutter={[32, 32]}>
-            {" "}
             <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-              <CustomCard
-                cardTitle="RECRUITMENT"
-                data={[
-                  { key: "1", name: "Existing", value: "6" },
-                  { key: "2", name: "Registrations", value: "20" },
-                  { key: "3", name: "New Codes", value: "10" },
-                ]}
-              />
+              <CustomCard cardTitle="RECRUITMENT" data={RECRUITMENT} />
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-              <CustomCard
-                cardTitle="PENDING CLEARANCE"
-                data={[
-                  { key: "1", name: "Proposals", value: "3" },
-                  { key: "2", name: "Suspense", value: "250, 000" },
-                  { key: "3", name: "Renewals", value: "120, 000" },
-                  { key: "4", name: "Revivals", value: "25, 000" },
-                ]}
-              />
+              <CustomCard cardTitle="PENDING CLEARANCE" data={CLEARANCE} />
             </Col>
           </Row>
           <Row gutter={[32, 32]}>
-            {" "}
             <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-              <CustomCard
-                cardTitle="NOTES"
-                cardType="notes"
-                data={[
-                  {
-                    key: "1",
-                    name: "Recruitment program at school",
-                    value: "3",
-                  },
-                  { key: "2", name: "Leads campaign", value: "250, 000" },
-                  { key: "3", name: "New advisor training", value: "120, 000" },
-                ]}
-              />
+              <CustomCard cardTitle="NOTES" cardType="notes" data={NOTES} />
             </Col>
           </Row>
         </>

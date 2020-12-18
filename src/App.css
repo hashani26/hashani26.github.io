@@ -66,11 +66,21 @@ body {
   color: #ff1100;
   font-weight: 600;
 }
-.select-input-complete {
+.select-input-completed {
   color: #04cd22;
   font-weight: 600;
 }
 .ant-select-selector {
   border-radius: 25px !important;
-  /* border: 1px solid red !important; */
+}
+.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
 }
