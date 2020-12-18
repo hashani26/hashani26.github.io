@@ -1,3 +1,5 @@
+@import "~antd/dist/antd.css";
+
 .App {
   text-align: center;
 }
@@ -35,4 +37,40 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  padding: 30px;
+  background-color: #f6faff;
+}
+
+.bordered-box {
+  border: 1px solid #1890ff;
+  border-radius: 25px;
+}
+.box-shadow {
+  box-shadow: 0 4px 8px 0 hsla(0, 0%, 80.8%, 0.5);
+}
+
+.full-height {
+  min-height: 100%;
+}
+.select-input {
+  width: 150px;
+}
+.select-input-pending {
+  color: #ff6200;
+  font-weight: 600;
+}
+.select-input-absent {
+  color: #ff1100;
+  font-weight: 600;
+}
+.select-input-complete {
+  color: #04cd22;
+  font-weight: 600;
+}
+.ant-select-selector {
+  border-radius: 25px !important;
+  /* border: 1px solid red !important; */
 }
